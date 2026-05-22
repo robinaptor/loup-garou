@@ -24,7 +24,7 @@ export const GamePage = () => {
   const [showRoleReveal, setShowRoleReveal] = useState(false);
   const [showPhaseAnnouncer, setShowPhaseAnnouncer] = useState(false);
   const [showDeathAnnounce, setShowDeathAnnounce] = useState(false);
-  const [prevPhase, setPrevPhase] = useState(phase);
+  const [prevPhase, setPrevPhase] = useState<string | null>(null);
   const [hunterTarget, setHunterTarget] = useState<string | null>(null);
 
   // Trigger phase announcements and role reveals on phase changes
