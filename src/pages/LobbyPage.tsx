@@ -90,8 +90,8 @@ export const LobbyPage = ({ broadcastState, broadcast }: LobbyPageProps) => {
               Lancer la partie
             </Button>
           ) : (
-            <div className="text-center p-6 bg-mist/10 rounded-xl border border-gold/20">
-              <p className="text-gold font-display animate-pulse">En attente de l'hôte...</p>
+            <div className="text-center p-6 glass-panel rounded-xl">
+              <p className="text-gold font-display animate-pulse uppercase tracking-widest text-sm">En attente de l'hôte...</p>
             </div>
           )}
           

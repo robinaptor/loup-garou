@@ -24,7 +24,7 @@ export const PlayerList = ({ players, currentPlayerId }: PlayerListProps) => {
 
   return (
     <div className="w-full">
-      <h3 className="text-xl text-gold mb-4 border-b border-gold/30 pb-2">Joueurs ({players.length})</h3>
+      <h3 className="text-xl text-gold mb-4 border-b border-gold/30 pb-2 font-display tracking-widest uppercase">Joueurs ({players.length})</h3>
       <motion.div 
         className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"
         variants={containerVariants}

@@ -36,8 +36,8 @@ export const HomePage = () => {
       </motion.div>
 
       <motion.div
-        className="bg-night/80 border border-gold/30 p-8 rounded-xl shadow-[0_0_40px_rgba(0,0,0,0.5)] max-w-md w-full backdrop-blur-sm"
-        initial={{ opacity: 0, scale: 0.9 }}
+        className="glass-panel p-10 rounded-xl max-w-md w-full"
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.3 }}
       >
@@ -47,7 +47,7 @@ export const HomePage = () => {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full bg-mist/20 border-b-2 border-mist focus:border-gold outline-none px-4 py-3 text-xl transition-colors"
+            className="w-full bg-black/40 border border-white/5 focus:border-gold/50 rounded-md outline-none px-4 py-3 text-xl transition-all shadow-inner"
             placeholder="Ex: Villageois123"
             maxLength={15}
           />
@@ -66,7 +66,7 @@ export const HomePage = () => {
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-mist/50"></div>
           </div>
-          <span className="relative bg-night px-4 text-mist text-sm uppercase tracking-widest font-display">ou</span>
+          <span className="relative bg-[#111116] px-4 text-mist text-sm uppercase tracking-widest font-display">ou</span>
         </div>
 
         <div className="text-left mb-6">
@@ -75,7 +75,7 @@ export const HomePage = () => {
             type="text"
             value={roomCodeInput}
             onChange={(e) => setRoomCodeInput(e.target.value.toUpperCase())}
-            className="w-full bg-mist/20 border-b-2 border-mist focus:border-gold outline-none px-4 py-3 text-xl tracking-widest text-center transition-colors uppercase"
+            className="w-full bg-black/40 border border-white/5 focus:border-gold/50 rounded-md outline-none px-4 py-3 text-xl tracking-widest text-center transition-all uppercase shadow-inner"
             placeholder="XXX-XXX"
             maxLength={7}
           />

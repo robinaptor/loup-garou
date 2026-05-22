@@ -15,8 +15,9 @@
 body {
   background-color: var(--night);
   color: #e8e0d0;
-  font-family: 'Crimson Text', serif;
+  font-family: 'Inter', sans-serif;
   overflow-x: hidden;
+  letter-spacing: 0.02em;
 }
 
 /* Grain overlay sur tout le site */
@@ -30,9 +31,30 @@ body::after {
   z-index: 9999;
 }
 
-h1, h2, h3 {
+h1, h2, h3, .font-display {
   font-family: 'Cinzel', serif;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Utilities Premium */
+.glass-panel {
+  background: rgba(15, 15, 20, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
 }
 
 /* Scrollbar custom */
@@ -43,43 +65,59 @@ h1, h2, h3 {
 /* Sélection de texte */
 ::selection { background: var(--blood); color: #fff; }
 
-/* PlayerCard styles */
+/* PlayerCard styles - Refonte Premium */
 .player-card {
   position: relative;
-  background: linear-gradient(145deg, #1a1a2e, #16213e);
-  border: 1px solid rgba(201, 168, 76, 0.3);
-  border-radius: 12px;
-  padding: 1rem;
+  background: linear-gradient(160deg, #181822 0%, #0d0d14 100%);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 4px;
+  padding: 1.5rem 1rem;
   cursor: pointer;
-  transition: border-color 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   text-align: center;
-  
-  /* Effet parchemin */
-  box-shadow:
-    0 2px 8px rgba(0,0,0,0.5),
-    inset 0 1px 0 rgba(255,255,255,0.05);
+  box-shadow: 
+    0 10px 20px rgba(0,0,0,0.5),
+    inset 0 0 0 1px rgba(255,255,255,0.02),
+    inset 0 0 20px rgba(0,0,0,0.8);
+  overflow: hidden;
+}
+
+.player-card::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border: 1px solid rgba(201, 168, 76, 0.1);
+  border-radius: 2px;
+  pointer-events: none;
 }
 
 .player-card:hover {
-  border-color: rgba(201, 168, 76, 0.7);
+  border-color: rgba(201, 168, 76, 0.8);
+  transform: translateY(-5px);
+  box-shadow: 
+    0 15px 30px rgba(0,0,0,0.7),
+    0 0 20px rgba(201, 168, 76, 0.15),
+    inset 0 0 0 1px rgba(201, 168, 76, 0.1);
 }
 
 .player-card--selected {
   border-color: #8b1a1a;
+  background: linear-gradient(160deg, #2a1111 0%, #160808 100%);
   box-shadow:
-    0 0 0 2px #8b1a1a,
-    0 0 20px rgba(139, 26, 26, 0.4);
+    0 0 0 1px #8b1a1a,
+    0 0 30px rgba(139, 26, 26, 0.3),
+    inset 0 0 30px rgba(139, 26, 26, 0.2);
 }
 
 .player-card--dead {
-  filter: grayscale(0.8);
-  opacity: 0.5;
+  filter: grayscale(1) brightness(0.6) contrast(1.2);
+  opacity: 0.7;
   cursor: not-allowed;
 }
 
 .player-card--self {
-  border-color: rgba(201, 168, 76, 0.8);
-  background: linear-gradient(145deg, #1a2a1a, #162116);
+  border-color: rgba(201, 168, 76, 0.5);
+  background: linear-gradient(160deg, #1a2a1a 0%, #0c160c 100%);
 }
 
 .player-card__avatar {

@@ -24,8 +24,8 @@ export const RoleConfig = ({ config, updateConfig, isHost, totalPlayers }: RoleC
   const totalRoles = Object.values(config.roles).reduce((a, b) => a + b, 0);
 
   return (
-    <div className="w-full bg-mist/10 rounded-xl p-6 border border-gold/20">
-      <h3 className="text-xl text-gold mb-4 border-b border-gold/30 pb-2 flex justify-between">
+    <div className="w-full glass-panel rounded-xl p-6">
+      <h3 className="text-xl text-gold mb-4 border-b border-gold/30 pb-2 flex justify-between font-display tracking-widest uppercase">
         <span>Configuration des rôles</span>
         <span className={`${totalRoles === totalPlayers ? 'text-green-400' : 'text-red-400'}`}>
           {totalRoles} / {totalPlayers}
@@ -36,7 +36,7 @@ export const RoleConfig = ({ config, updateConfig, isHost, totalPlayers }: RoleC
         {(Object.keys(config.roles) as Role[]).map(role => {
           const count = config.roles[role];
           return (
-            <div key={role} className="flex items-center justify-between p-3 bg-night/50 rounded-lg border border-white/5">
+            <div key={role} className="flex items-center justify-between p-3 bg-black/40 rounded-lg border border-white/5 shadow-inner">
               <div className="flex items-center gap-3">
                 <RoleIcon role={role} size="sm" />
                 <span className="capitalize text-[#e8e0d0]">{role.replace('-', ' ')}</span>

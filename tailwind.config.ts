@@ -14,7 +14,7 @@ export default {
       },
       fontFamily: {
         display: ['Cinzel', 'serif'],
-        body: ['Crimson Text', 'serif'],
+        sans: ['Inter', 'sans-serif'],
       },
       animation: {
         'flicker': 'flicker 3s infinite',
