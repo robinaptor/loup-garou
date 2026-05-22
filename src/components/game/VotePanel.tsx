@@ -7,9 +7,10 @@ import { Button } from '../ui/Button';
 
 interface VotePanelProps {
   broadcastState: () => void;
+  broadcast: (type: string, payload: unknown) => void;
 }
 
-export const VotePanel = ({ broadcastState }: VotePanelProps) => {
+export const VotePanel = ({ broadcastState, broadcast }: VotePanelProps) => {
   const { 
     roomCode, currentPlayerId, players, votes,
     submitVote, resolveVote
@@ -29,8 +30,11 @@ export const VotePanel = ({ broadcastState }: VotePanelProps) => {
     if (localTarget && currentPlayerId) {
       submitVote(currentPlayerId, localTarget);
       setHasVotedLocally(true);
-      // Let other clients know we updated the store
-      broadcastState();
+      if (isHost) {
+        broadcastState();
+      } else {
+        broadcast('PLAYER_ACTION', { action: 'SUBMIT_VOTE', data: { voterId: currentPlayerId, targetId: localTarget } });
+      }
     }
   };
 

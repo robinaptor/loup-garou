@@ -17,9 +17,10 @@ const ROLE_NARRATION: Record<string, { icon: string; title: string; color: strin
 
 interface NightActionProps {
   broadcastState: () => void;
+  broadcast: (type: string, payload: unknown) => void;
 }
 
-export const NightAction = ({ broadcastState }: NightActionProps) => {
+export const NightAction = ({ broadcastState, broadcast }: NightActionProps) => {
   const { 
     roomCode, currentPlayerId, players, currentNightRole, 
     nightKillTarget, witchPotionUsed, witchPoisonUsed, wolfVotes,
@@ -83,8 +84,13 @@ export const NightAction = ({ broadcastState }: NightActionProps) => {
   if (currentNightRole === 'loup-garou') {
     const handleWolfVote = () => {
       if (localTarget && currentPlayerId) {
+        const isHost = currentPlayer?.isHost ?? false;
         submitWolfVote(currentPlayerId, localTarget);
-        setTimeout(() => broadcastState(), 50);
+        if (isHost) {
+          setTimeout(() => broadcastState(), 50);
+        } else {
+          broadcast('PLAYER_ACTION', { action: 'SUBMIT_WOLF_VOTE', data: { voterId: currentPlayerId, targetId: localTarget } });
+        }
       }
     };
 

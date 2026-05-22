@@ -17,7 +17,7 @@ export const GamePage = () => {
     eliminateAndContinue
   } = useGameStore();
 
-  const { broadcastState } = useBroadcast(roomCode);
+  const { broadcastState, broadcast } = useBroadcast(roomCode);
   const currentPlayer = players.find(p => p.id === currentPlayerId);
   const isHost = currentPlayer?.isHost ?? false;
 
@@ -67,7 +67,11 @@ export const GamePage = () => {
     setShowRoleReveal(false);
     if (currentPlayerId) {
       markPlayerReady(currentPlayerId);
-      setTimeout(() => broadcastState(), 50);
+      if (isHost) {
+        setTimeout(() => broadcastState(), 50);
+      } else {
+        broadcast('PLAYER_ACTION', { action: 'MARK_READY', data: { playerId: currentPlayerId } });
+      }
     }
   };
 
@@ -151,7 +155,7 @@ export const GamePage = () => {
         )}
 
         {phase === 'nuit' && !showPhaseAnnouncer && (
-          <NightAction broadcastState={broadcastState} />
+          <NightAction broadcastState={broadcastState} broadcast={broadcast} />
         )}
 
         {phase === 'jour-debat' && !showPhaseAnnouncer && !showDeathAnnounce && (
@@ -171,7 +175,7 @@ export const GamePage = () => {
         )}
 
         {phase === 'jour-vote' && !showPhaseAnnouncer && (
-          <VotePanel broadcastState={broadcastState} />
+          <VotePanel broadcastState={broadcastState} broadcast={broadcast} />
         )}
         
         {phase === 'chasseur-action' && (

@@ -72,6 +72,40 @@ export const useBroadcast = (roomCode: string) => {
           break;
         }
 
+        case 'PLAYER_ACTION': {
+          if (isHost) {
+            const action = payload as { action: string; data: Record<string, string> };
+            switch (action.action) {
+              case 'MARK_READY': {
+                const store = useGameStore.getState();
+                if (!store.readyPlayers.includes(action.data.playerId)) {
+                  useGameStore.setState({ readyPlayers: [...store.readyPlayers, action.data.playerId] });
+                }
+                break;
+              }
+              case 'SUBMIT_VOTE': {
+                useGameStore.getState().submitVote(action.data.voterId, action.data.targetId);
+                break;
+              }
+              case 'SUBMIT_WOLF_VOTE': {
+                useGameStore.getState().submitWolfVote(action.data.voterId, action.data.targetId);
+                break;
+              }
+            }
+            // Re-broadcast updated state to all clients
+            setTimeout(() => {
+              const freshState = useGameStore.getState();
+              socket.send(JSON.stringify({
+                type: 'STATE_UPDATE',
+                payload: extractSyncState(freshState),
+                senderId: currentPlayerId,
+                timestamp: Date.now(),
+              }));
+            }, 50);
+          }
+          break;
+        }
+
         case 'REQUEST_STATE': {
           if (isHost) {
             socket.send(JSON.stringify({
