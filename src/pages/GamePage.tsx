@@ -151,7 +151,7 @@ export const GamePage = () => {
         )}
 
         {phase === 'nuit' && !showPhaseAnnouncer && (
-          <NightAction />
+          <NightAction broadcastState={broadcastState} />
         )}
 
         {phase === 'jour-debat' && !showPhaseAnnouncer && !showDeathAnnounce && (
@@ -171,7 +171,7 @@ export const GamePage = () => {
         )}
 
         {phase === 'jour-vote' && !showPhaseAnnouncer && (
-          <VotePanel />
+          <VotePanel broadcastState={broadcastState} />
         )}
         
         {phase === 'chasseur-action' && (

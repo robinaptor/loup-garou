@@ -1,17 +1,19 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useGameStore } from '../../store/gameStore';
-import { useBroadcast } from '../../hooks/useBroadcast';
+
 import { PlayerGrid } from './PlayerGrid';
 import { Button } from '../ui/Button';
 
-export const VotePanel = () => {
+interface VotePanelProps {
+  broadcastState: () => void;
+}
+
+export const VotePanel = ({ broadcastState }: VotePanelProps) => {
   const { 
     roomCode, currentPlayerId, players, votes,
     submitVote, resolveVote
   } = useGameStore();
-
-  const { broadcastState, broadcast } = useBroadcast(roomCode);
   const currentPlayer = players.find(p => p.id === currentPlayerId);
   const alivePlayers = players.filter(p => p.isAlive);
   const isHost = currentPlayer?.isHost ?? false;

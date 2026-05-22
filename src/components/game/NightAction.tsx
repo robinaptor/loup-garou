@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useGameStore } from '../../store/gameStore';
-import { useBroadcast } from '../../hooks/useBroadcast';
+
 import { PlayerGrid } from './PlayerGrid';
 import { Button } from '../ui/Button';
 import { RoleIcon } from './RoleIcon';
@@ -15,15 +15,17 @@ const ROLE_NARRATION: Record<string, { icon: string; title: string; color: strin
   'sorciere': { icon: '🧪', title: 'La Sorcière se réveille...', color: 'text-green-400' },
 };
 
-export const NightAction = () => {
+interface NightActionProps {
+  broadcastState: () => void;
+}
+
+export const NightAction = ({ broadcastState }: NightActionProps) => {
   const { 
     roomCode, currentPlayerId, players, currentNightRole, 
     nightKillTarget, witchPotionUsed, witchPoisonUsed, wolfVotes,
     setNightKillTarget, setWitchTarget, useWitchSave, useWitchKill, submitWolfVote,
     setCupidCouple, advanceNightRole 
   } = useGameStore();
-
-  const { broadcastState } = useBroadcast(roomCode);
   const currentPlayer = players.find(p => p.id === currentPlayerId);
   const alivePlayers = players.filter(p => p.isAlive);
   const isMyTurn = currentPlayer?.role === currentNightRole && currentPlayer?.isAlive;
