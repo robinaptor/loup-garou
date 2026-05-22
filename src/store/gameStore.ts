@@ -305,6 +305,7 @@ export const useGameStore = create<GameStore>()(
         if (maxVotes === 0) {
            // nobody voted
            set({ deadThisRound: [], phase: 'nuit', round: get().round + 1, votes: {} });
+           get().advanceNightRole();
            return;
         }
 
@@ -315,6 +316,7 @@ export const useGameStore = create<GameStore>()(
         if (topCandidates.length > 1) {
           // Égalité
           set({ deadThisRound: [], phase: 'nuit', round: get().round + 1, votes: {} });
+          get().advanceNightRole();
           return;
         }
 
@@ -356,6 +358,7 @@ export const useGameStore = create<GameStore>()(
           round: get().round + 1,
           votes: {}
         });
+        get().advanceNightRole();
       },
 
       advancePhase: () => {
