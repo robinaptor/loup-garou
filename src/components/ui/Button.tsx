@@ -41,7 +41,7 @@ export const Button = ({
       {...props}
     >
       {icon && <span className="mr-2 text-xl">{icon}</span>}
-      {children}
+      {children as React.ReactNode}
     </motion.button>
   );
 };
