@@ -45,6 +45,7 @@ export interface GameState {
   readyPlayers: string[];
   config: GameConfig;
   nightKillTarget: string | null;      // cible des loups
+  wolfVotes: Record<string, string>;   // Votes des loups (voterId -> targetId)
   witchPotionUsed: boolean;
   witchPoisonUsed: boolean;
   votes: Record<string, string>;       // voterId -> targetId

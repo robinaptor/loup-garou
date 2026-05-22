@@ -17,6 +17,7 @@ export interface GameStore extends GameState {
   startGame: () => void;
 
   // Actions nuit
+  submitWolfVote: (voterId: string, targetId: string) => void;
   setNightKillTarget: (targetId: string) => void;
   useSeerPower: (targetId: string) => Role | null;
   setWitchTarget: (targetId: string) => void;
@@ -75,6 +76,7 @@ export const useGameStore = create<GameStore>()(
       readyPlayers: [],
       config: initialConfig,
       nightKillTarget: null,
+      wolfVotes: {},
       witchPotionUsed: false,
       witchPoisonUsed: false,
       votes: {},
@@ -136,7 +138,7 @@ export const useGameStore = create<GameStore>()(
       },
 
       leaveRoom: () => {
-        set({ currentPlayerId: null, roomCode: '', players: [], readyPlayers: [], phase: 'lobby' });
+        set({ currentPlayerId: null, roomCode: '', players: [], readyPlayers: [], wolfVotes: {}, phase: 'lobby' });
       },
 
       markPlayerReady: (id) => {
@@ -187,8 +189,33 @@ export const useGameStore = create<GameStore>()(
           winner: null,
           currentNightRole: null,
           nightKillTarget: null,
+          wolfVotes: {},
           gameLog: [],
         });
+      },
+
+      submitWolfVote: (voterId, targetId) => {
+        const state = get();
+        const newVotes = { ...state.wolfVotes, [voterId]: targetId };
+        set({ wolfVotes: newVotes });
+
+        // Check majority
+        const aliveWolves = state.players.filter(p => p.isAlive && p.role === 'loup-garou');
+        const voteCount: Record<string, number> = {};
+        Object.values(newVotes).forEach(target => {
+          voteCount[target] = (voteCount[target] ?? 0) + 1;
+        });
+
+        // Majority rule: > half of alive wolves
+        const majorityThreshold = Math.floor(aliveWolves.length / 2) + 1;
+        
+        for (const [target, count] of Object.entries(voteCount)) {
+          if (count >= majorityThreshold) {
+            set({ nightKillTarget: target });
+            get().advanceNightRole();
+            break;
+          }
+        }
       },
 
       setNightKillTarget: (targetId) => set({ nightKillTarget: targetId }),
@@ -283,6 +310,7 @@ export const useGameStore = create<GameStore>()(
           deadThisRound: finalDead,
           phase: 'jour-debat',
           nightKillTarget: null,
+          wolfVotes: {},
           currentNightRole: null,
         });
       },

@@ -135,6 +135,7 @@ function extractSyncState(state: GameState & { currentPlayerId: string | null })
     phase: state.phase,
     round: state.round,
     roomCode: state.roomCode,
+    wolfVotes: state.wolfVotes,
     nightKillTarget: state.nightKillTarget,
     votes: state.votes,
     deadThisRound: state.deadThisRound,

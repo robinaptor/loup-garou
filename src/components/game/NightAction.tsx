@@ -18,8 +18,8 @@ const ROLE_NARRATION: Record<string, { icon: string; title: string; color: strin
 export const NightAction = () => {
   const { 
     roomCode, currentPlayerId, players, currentNightRole, 
-    nightKillTarget, witchPotionUsed, witchPoisonUsed,
-    setNightKillTarget, setWitchTarget, useWitchSave, useWitchKill,
+    nightKillTarget, witchPotionUsed, witchPoisonUsed, wolfVotes,
+    setNightKillTarget, setWitchTarget, useWitchSave, useWitchKill, submitWolfVote,
     setCupidCouple, advanceNightRole 
   } = useGameStore();
 
@@ -80,26 +80,50 @@ export const NightAction = () => {
   // === LOUPS-GAROUS ===
   if (currentNightRole === 'loup-garou') {
     const handleWolfVote = () => {
-      if (localTarget) {
-        setNightKillTarget(localTarget);
-        handleNext();
+      if (localTarget && currentPlayerId) {
+        submitWolfVote(currentPlayerId, localTarget);
+        setTimeout(() => broadcastState(), 50);
       }
     };
+
+    const aliveWolves = alivePlayers.filter(p => p.role === 'loup-garou');
+    const majorityThreshold = Math.floor(aliveWolves.length / 2) + 1;
+    
+    const voteCount: Record<string, number> = {};
+    Object.values(wolfVotes).forEach(target => {
+      voteCount[target] = (voteCount[target] ?? 0) + 1;
+    });
+
+    const myCurrentVote = currentPlayerId ? wolfVotes[currentPlayerId] : null;
 
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center p-6 text-center">
         <span className="text-5xl mb-4 drop-shadow-[0_0_15px_rgba(139,26,26,0.6)]">🐺</span>
         <h2 className="text-4xl text-blood font-display mb-2">Choisissez votre victime</h2>
-        <p className="text-mist mb-6 italic">Concertez-vous en silence...</p>
+        <p className="text-mist mb-6 italic">Il faut {majorityThreshold} vote(s) pour dévorer une proie.</p>
         <PlayerGrid 
           players={alivePlayers.filter(p => p.role !== 'loup-garou')}
           onSelect={setLocalTarget}
-          selectedId={localTarget}
+          selectedId={localTarget || myCurrentVote}
           theme="blood"
         />
-        <Button onClick={handleWolfVote} disabled={!localTarget} size="lg" className="mt-6">
-          Dévorer cette proie 🐺
-        </Button>
+        
+        <div className="mt-6 flex flex-col items-center">
+          <Button 
+            onClick={handleWolfVote} 
+            disabled={!localTarget || localTarget === myCurrentVote} 
+            size="lg" 
+            className="mb-4"
+          >
+            {myCurrentVote ? 'Changer mon vote' : 'Voter pour dévorer 🐺'}
+          </Button>
+          
+          {myCurrentVote && (
+             <p className="text-blood font-bold text-lg animate-pulse">
+               En attente des autres loups... ({voteCount[myCurrentVote]} / {majorityThreshold} votes)
+             </p>
+          )}
+        </div>
       </motion.div>
     );
   }
