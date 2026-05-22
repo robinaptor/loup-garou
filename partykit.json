@@ -1,0 +1,5 @@
+{
+  "name": "loup-garou-server",
+  "main": "server/index.ts",
+  "compatibilityDate": "2024-03-20"
+}
