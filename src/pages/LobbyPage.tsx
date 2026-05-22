@@ -5,19 +5,22 @@ import { RoomCode } from '../components/room/RoomCode';
 import { PlayerList } from '../components/room/PlayerList';
 import { RoleConfig } from '../components/room/RoleConfig';
 import { Button } from '../components/ui/Button';
-import { useBroadcast } from '../hooks/useBroadcast';
 
-export const LobbyPage = () => {
+interface LobbyPageProps {
+  broadcastState: () => void;
+  broadcast: (type: string, payload: unknown) => void;
+}
+
+export const LobbyPage = ({ broadcastState, broadcast }: LobbyPageProps) => {
   const { 
     roomCode, 
     players, 
     currentPlayerId, 
     config, 
     updateConfig, 
-    startGame 
+    startGame,
+    leaveRoom
   } = useGameStore();
-
-  const { broadcastState, broadcast } = useBroadcast(roomCode);
 
   const currentPlayer = players.find(p => p.id === currentPlayerId);
   const isHost = currentPlayer?.isHost ?? false;

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useGameStore } from '../store/gameStore';
-import { useBroadcast } from '../hooks/useBroadcast';
 import { RoleReveal } from '../components/game/RoleReveal';
 import { PhaseAnnouncer } from '../components/game/PhaseAnnouncer';
 import { NightAction } from '../components/game/NightAction';
@@ -10,14 +9,18 @@ import { DeathAnnounce } from '../components/game/DeathAnnounce';
 import { PlayerGrid } from '../components/game/PlayerGrid';
 import { Button } from '../components/ui/Button';
 
-export const GamePage = () => {
+interface GamePageProps {
+  broadcastState: () => void;
+  broadcast: (type: string, payload: unknown) => void;
+}
+
+export const GamePage = ({ broadcastState, broadcast }: GamePageProps) => {
   const { 
     roomCode, currentPlayerId, players, readyPlayers, phase, config, 
     deadThisRound, advancePhase, checkWinCondition, markPlayerReady,
     eliminateAndContinue
   } = useGameStore();
 
-  const { broadcastState, broadcast } = useBroadcast(roomCode);
   const currentPlayer = players.find(p => p.id === currentPlayerId);
   const isHost = currentPlayer?.isHost ?? false;
 
