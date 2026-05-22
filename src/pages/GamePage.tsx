@@ -193,7 +193,21 @@ export const GamePage = () => {
                 </Button>
               </>
             ) : (
-              <p className="text-gold mt-4 animate-pulse text-lg">En attente du chasseur...</p>
+              <div className="flex flex-col items-center w-full">
+                <p className="text-gold mt-4 animate-pulse text-lg">En attente du chasseur...</p>
+                {isHost && (
+                  <Button 
+                    onClick={() => { 
+                      eliminateAndContinue([]); 
+                      setTimeout(() => broadcastState(), 50); 
+                    }} 
+                    variant="ghost" 
+                    className="mt-12 text-mist/50 hover:text-mist"
+                  >
+                    Passer le tour du chasseur (Forcer)
+                  </Button>
+                )}
+              </div>
             )}
           </div>
         )}

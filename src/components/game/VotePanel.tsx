@@ -47,9 +47,30 @@ export const VotePanel = ({ broadcastState }: VotePanelProps) => {
 
   if (!currentPlayer?.isAlive) {
     return (
-      <div className="flex flex-col items-center p-6 text-center">
+      <div className="flex flex-col items-center p-6 text-center w-full">
         <h2 className="text-3xl text-mist font-display mb-4">Le village vote...</h2>
         <p className="text-mist/70 italic">Vous êtes mort(e). Observez en silence.</p>
+
+        {isHost && (
+          <div className="mt-12 border-t border-mist/30 pt-8 w-full">
+            <p className="text-mist mb-4">Votes en cours : {totalVotes} / {alivePlayers.length}</p>
+            <Button onClick={handleReveal} variant="danger" size="lg" disabled={!allVoted && !revealing}>
+              {revealing ? 'Révélation en cours...' : 'Dépouiller les votes'}
+            </Button>
+            {!allVoted && <p className="text-xs text-red-400 mt-2">Vous pouvez forcer le dépouillement si des joueurs sont absents.</p>}
+          </div>
+        )}
+
+        {revealing && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-night/95 backdrop-blur-md"
+          >
+            <div className="text-center">
+              <h2 className="text-6xl text-blood font-display mb-8 animate-pulse">Dépouillement...</h2>
+            </div>
+          </motion.div>
+        )}
       </div>
     );
   }
