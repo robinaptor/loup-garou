@@ -38,7 +38,9 @@ export const NightAction = () => {
       <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4">
         <h2 className="text-3xl text-mist font-display animate-pulse mb-4">Le village dort...</h2>
         {currentNightRole && (
-          <p className="text-mist/70 italic text-lg">En attente de : <span className="capitalize">{currentNightRole}</span></p>
+          <p className="text-mist/70 italic text-lg">
+            Le narrateur réveille : <span className="capitalize text-gold font-bold ml-2">{currentNightRole.replace('-', ' ')}</span>
+          </p>
         )}
       </div>
     );

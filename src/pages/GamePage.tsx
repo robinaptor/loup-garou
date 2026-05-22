@@ -11,8 +11,8 @@ import { Button } from '../components/ui/Button';
 
 export const GamePage = () => {
   const { 
-    roomCode, currentPlayerId, players, phase, config, 
-    deadThisRound, advancePhase, checkWinCondition
+    roomCode, currentPlayerId, players, readyPlayers, phase, config, 
+    deadThisRound, advancePhase, checkWinCondition, markPlayerReady
   } = useGameStore();
 
   const { broadcastState } = useBroadcast(roomCode);
@@ -34,7 +34,12 @@ export const GamePage = () => {
     if (phase === 'jour-debat' && deadThisRound.length > 0) {
       setShowDeathAnnounce(true);
     }
-    
+    // Ready check for host
+    if (isHost && phase === 'distribution-roles' && readyPlayers.length > 0 && readyPlayers.length === players.length) {
+      advancePhase();
+      broadcastState();
+    }
+
     // Quick win check for host
     if (isHost && phase !== 'distribution-roles') {
       const w = checkWinCondition();
@@ -43,13 +48,13 @@ export const GamePage = () => {
         broadcastState();
       }
     }
-  }, [phase, deadThisRound.length, isHost, checkWinCondition, broadcastState]);
+  }, [phase, deadThisRound.length, isHost, checkWinCondition, broadcastState, readyPlayers.length, players.length, advancePhase]);
 
   const handleRoleConfirm = () => {
     setShowRoleReveal(false);
-    if (isHost) {
-      advancePhase();
-      broadcastState();
+    if (currentPlayerId) {
+      markPlayerReady(currentPlayerId);
+      setTimeout(() => broadcastState(), 50);
     }
   };
 
@@ -101,8 +106,9 @@ export const GamePage = () => {
       {/* Main Game Content based on Phase */}
       <div className="flex-1 flex flex-col items-center justify-center p-4">
         {phase === 'distribution-roles' && !showRoleReveal && (
-          <div className="text-center animate-pulse text-mist">
-            En attente des autres joueurs...
+          <div className="text-center flex flex-col items-center">
+            <h2 className="text-3xl text-mist font-display animate-pulse mb-4">En attente des autres joueurs...</h2>
+            <p className="text-mist/70">{readyPlayers.length} / {players.length} joueurs prêts</p>
           </div>
         )}
 

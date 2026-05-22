@@ -42,6 +42,7 @@ export interface GameState {
   phase: Phase;
   round: number;
   players: Player[];
+  readyPlayers: string[];
   config: GameConfig;
   nightKillTarget: string | null;      // cible des loups
   witchPotionUsed: boolean;

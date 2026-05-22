@@ -10,6 +10,7 @@ export interface GameStore extends GameState {
   createRoom: (hostName: string, id: string) => string;
   joinRoom: (code: string, playerName: string, id: string) => boolean;
   leaveRoom: () => void;
+  markPlayerReady: (id: string) => void;
 
   // Actions lobby
   updateConfig: (config: Partial<GameConfig>) => void;
@@ -71,6 +72,7 @@ export const useGameStore = create<GameStore>()(
       phase: 'lobby',
       round: 0,
       players: [],
+      readyPlayers: [],
       config: initialConfig,
       nightKillTarget: null,
       witchPotionUsed: false,
@@ -101,6 +103,7 @@ export const useGameStore = create<GameStore>()(
             killedByWitch: false,
             isCouple: false,
           }],
+          readyPlayers: [],
           phase: 'lobby',
           round: 0,
         });
@@ -133,7 +136,14 @@ export const useGameStore = create<GameStore>()(
       },
 
       leaveRoom: () => {
-        set({ currentPlayerId: null, roomCode: '', players: [], phase: 'lobby' });
+        set({ currentPlayerId: null, roomCode: '', players: [], readyPlayers: [], phase: 'lobby' });
+      },
+
+      markPlayerReady: (id) => {
+        const { readyPlayers } = get();
+        if (!readyPlayers.includes(id)) {
+          set({ readyPlayers: [...readyPlayers, id] });
+        }
       },
 
       updateConfig: (config) => {
@@ -169,6 +179,7 @@ export const useGameStore = create<GameStore>()(
 
         set({
           players: newPlayers,
+          readyPlayers: [],
           phase: 'distribution-roles',
           round: 1,
           votes: {},
@@ -351,6 +362,7 @@ export const useGameStore = create<GameStore>()(
         const phase = get().phase;
         if (phase === 'distribution-roles') {
            set({ phase: 'nuit' });
+           get().advanceNightRole(); // Start the narrator loop!
         } else if (phase === 'jour-debat') {
            set({ phase: 'jour-vote' });
         }

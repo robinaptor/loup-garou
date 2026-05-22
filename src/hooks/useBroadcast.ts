@@ -131,6 +131,7 @@ export const useBroadcast = (roomCode: string) => {
 function extractSyncState(state: GameState & { currentPlayerId: string | null }) {
   return {
     players: state.players,
+    readyPlayers: state.readyPlayers,
     phase: state.phase,
     round: state.round,
     roomCode: state.roomCode,
